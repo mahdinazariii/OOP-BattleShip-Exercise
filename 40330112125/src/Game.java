@@ -2,7 +2,6 @@ import java.util.Scanner;
 
 public class Game {
     Utils utils = new Utils();
-    AiPlayer aiPlayer = null;
     Player player1;
     Player player2;
 
@@ -15,6 +14,9 @@ public class Game {
 
 
         } while (playAgain);
+            if(!askForReplay()){
+                System.out.println("Have a nice day!");
+            }
     }
 
     private boolean askForReplay() {
@@ -117,7 +119,7 @@ public class Game {
         boolean playerturn1 = true;
         while (!isGmaeOver()) {
             if (playerturn1) {
-                int Hit = 0;
+
 
                 System.out.println("Player 1 turn");
 
@@ -159,9 +161,14 @@ public class Game {
         int col = input.charAt(0) - 'A';
         String row = input.substring(1);
         int row1 = Integer.parseInt(row);
+        if (row1 < 0 || row1 >= Board.getSizeOfBoard() || col < 0 || col >= Board.getSizeOfBoard()) {
+            System.out.println("Invalid position ");
+            return;
+        }
 
         char[][] opponentGrid = opponent.getBoard().getBoard();
         char[][] trackingGrid = current.getTrackingBoard().getBoard();
+
 
 
         if (trackingGrid[row1][col] == Board.getMiss() | trackingGrid[row1][col] == Board.getHit()) {

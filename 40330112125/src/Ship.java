@@ -37,69 +37,61 @@ public class Ship {
     }
     public void placeMannuallyShips(Board board, int sizes, Utils utils) {
         Scanner scanner = new Scanner(System.in);
-        String input;
-        boolean valid = false;
         int[] sizeOfShips = null;
+
         if (Board.getSizeOfBoard() >= 5) {
             sizeOfShips = new int[]{2, 3, 4, 5};
-        } else if (Board.getSizeOfBoard() >= 2) {
-            sizeOfShips = new int[]{2};
-        } else if (Board.getSizeOfBoard() >= 3) {
-            sizeOfShips = new int[]{2, 3};
         } else if (Board.getSizeOfBoard() >= 4) {
             sizeOfShips = new int[]{2, 3, 4};
+        } else if (Board.getSizeOfBoard() >= 3) {
+            sizeOfShips = new int[]{2, 3};
+        } else if (Board.getSizeOfBoard() >= 2) {
+            sizeOfShips = new int[]{2};
         }
 
-            System.out.println("  Mannual placement , enter Ship Size : ");
-            int shipSize ;
+        for (int shipIndex = 0; shipIndex < sizeOfShips.length; shipIndex++) {
+            int shipSize = sizeOfShips[shipIndex];
+            boolean valid = false;
+
+            System.out.println("Manual placement for Ship " + (shipIndex + 1) + " (Size: " + shipSize + ")");
             board.printGrid();
-        do {
-            shipSize = scanner.nextInt();
-            scanner.nextLine();
-            if (shipSize < 1 || shipSize > sizeOfShips[sizeOfShips.length - 1] || shipSize == 1 ) {
-                System.out.println("Invalid Ship Size, enter again");
-            }
-        } while (shipSize < 1 || shipSize > sizeOfShips[sizeOfShips.length - 1] || shipSize==1);
 
+            while (!valid) {
+                System.out.println("Enter the starting position (e.g., B6): ");
+                String input = scanner.nextLine().toUpperCase();
 
-        while (!valid) {
-            System.out.println("Enter your (col & row ex = B6): ");
-            input = scanner.nextLine().toUpperCase();
-            if (!utils.isValid(input, Board.getSizeOfBoard())) {
-                System.out.println("Invalid input, try again");
-                continue;
-            }
-            for(int size : sizeOfShips) {
-                boolean placed = false;
-                while (!placed) {
+                if (!utils.isValid(input, Board.getSizeOfBoard())) {
+                    System.out.println("Invalid input, try again.");
+                    continue;
+                }
 
+                System.out.println("Orientation: 1 for Vertical, 2 for Horizontal");
+                int orientation = scanner.nextInt();
+                scanner.nextLine();
+                boolean horizontal = (orientation == 2);
 
-                    System.out.println("Horizontal : 2 " + "Vertical : 1");
-                    int horizontal2 = scanner.nextInt();
-                    scanner.nextLine();
-                    boolean horizontal1 = horizontal2 == 2;
-                    int col = input.charAt(0) - 'A';
-                    int row = input.charAt(1) - '0';
-                    if (canPlaceShips(board, row, col, sizes, horizontal1)) {
-                        for (int i = 0; i < sizes; i++) {
-                            if (horizontal1) {
-                                board.getBoard()[row][col + i] = Board.getShip();
-                            } else {
-                                board.getBoard()[row + i][col] = Board.getShip();
-                            }
+                int col = input.charAt(0) - 'A';
+                int row = input.charAt(1) - '0';
+
+                if (canPlaceShips(board, row, col, shipSize, horizontal)) {
+                    for (int i = 0; i < shipSize; i++) {
+                        if (horizontal) {
+                            board.getBoard()[row][col + i] = Board.getShip();
+                        } else {
+                            board.getBoard()[row + i][col] = Board.getShip();
                         }
-
-                        System.out.println("Ship placed successfully ");
-                        valid = true;
-                    } else {
-                        System.out.println("Ship can not be placed ");
-
                     }
-                    placed = true;
+                    System.out.println("Ship " + (shipIndex + 1) + " placed successfully.");
+                    valid = true;
+                } else {
+                    System.out.println("Cannot place the ship , try again.");
                 }
             }
+
+            board.printGrid();
         }
-            }
+    }
+
 
 
    private boolean canPlaceShips(Board board, int row, int col, int size, boolean horizontal) {

@@ -13,7 +13,7 @@ public class Utils {
            return false;
        }
      int row1 = Integer.parseInt(row);
-       if(row1 < 1 || row1 > sizeOfBoard) {
+       if(row1 < 0 || row1 > sizeOfBoard) {
            return false;
        }
        return true;
