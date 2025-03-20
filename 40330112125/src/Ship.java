@@ -91,7 +91,7 @@ public class Ship {
             board.printGrid();
         }
     }
-
+//999
 
 
    private boolean canPlaceShips(Board board, int row, int col, int size, boolean horizontal) {
